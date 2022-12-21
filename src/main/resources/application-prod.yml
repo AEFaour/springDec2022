@@ -1,0 +1,7 @@
+
+spring:
+    datasource:
+      username: sa
+    jpa:
+      hibernate:
+        ddl-auto: create

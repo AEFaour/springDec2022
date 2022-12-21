@@ -1,0 +1,227 @@
+<!DOCTYPE html> 
+<html ng-app="biblioApp" >      
+<head>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="js/biblio.js"></script>
+<link rel="stylesheet" type="text/css" href="bootstrap-3.3.4/dist/css/bootstrap.min.css"/>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body ng-controller="livreController" >
+<div class="container">
+    <div class="row">
+		<div class="col-md-12">
+			<h3>Fonctionnalités</h3>
+
+			<div class="tabbable-panel">
+				<div class="tabbable-line">
+					<ul class="nav nav-tabs ">
+						<li  >
+							<a href="" data-toggle="tab" ng-click="changeMenu('accueil')">Accueil</a>
+						</li>
+						<li>
+							<a href="" data-toggle="tab" ng-click="changeMenu('livre')" >Gestion des Livres</a>
+						</li>
+						<li>
+							<a href="" data-toggle="tab" ng-click="changeMenu('emprunt')">Gestion des Emprunts</a>
+						</li>
+						<li>
+						<a href="" data-toggle="tab" ng-click="changeMenu('adherent')">Gestion des Adhérents</a>
+						</li>
+						<li>
+						<a href="" data-toggle="tab">Déconnexions</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-if="menu == 'livre' && livre == null" ng-init="loadAll()" >
+<div class="container">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default"> 
+					<div class="panel-heading">
+						<h3 class="panel-title">Liste des livres</h3>
+					</div>
+					<table class="table table-hover" id="dev-table">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Titre</th>
+								<th>Auteur</th>
+								<th>Parution</th>
+							</tr>
+						</thead>
+						<tbody>
+<!-- Construction dynamique du contenu du tableau -->
+	<tr ng-repeat="livre in livres">
+		<td>
+		<a href="" class="btn btn-success btn-block" ng-click="load(livre.id)">{{livre.id}}</a>	
+		</td>
+		<td>{{livre.titre}}</td>
+		<td>{{livre.auteur}}</td>
+		<td>{{livre.parution}}</td>
+	</tr>
+	<tr align=center>
+		<td colspan="4">
+			<a href="" class="btn btn-success btn-block" ng-click="load(0)">Nouveau livre</a>
+		</td>
+	</tr>
+	</tbody>
+</table>
+</div></div>
+</div></div>
+</div>
+<div ng-if="menu == 'livre' && livre != null">
+	<div class="container">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default"> 
+                <div class="panel-heading">
+                    <h3 class="panel-title">Edition <c:choose >
+                    <span ng-if="livre.id == 0">d'un nouveau livre</span>
+                    <span ng-if="livre.id != 0">du livre N° {{livre.id}}</span>
+					</h3>
+                </div>
+                <div class="panel-body">
+                    <form >
+                        <fieldset>
+                            <div class="form-group">
+                                Titre &nbsp;&nbsp;: <input class="form-control"  ng-model="livre.titre">
+                            </div>
+                            <div class="form-group">
+                                Auteur &nbsp;: <input class="form-control" ng-model="livre.auteur" >
+                            </div>
+                             <div class="form-group">
+                                Parution : <input class="form-control" ng-model="livre.parution" >
+                            </div>
+                            <!-- Change this to a button or input when using this as a form -->
+                            <div ng-if="livre.id != 0">
+								
+									<button class="btn btn-success btn-block" ng-click="update(livre)" >Modifier</button>
+									<button class="btn btn-success btn-block" ng-click="remove(livre.id)" >Supprimer</button>
+							</div>
+							<div ng-if="livre.id == 0">
+								<button type="submit"  class="btn btn-success btn-block" ng-click="create(livre)" >Créer</button>
+							</div>
+                            <button  class="btn  btn-block" ng-click="loadAll()">Retour</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div ng-if="menu == 'adherent' && adherent == null" ng-init="loadAllAdherent()" >
+<div class="container">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default"> 
+					<div class="panel-heading">
+						<h3 class="panel-title">Liste des Adherents</h3>
+					</div>
+					<table class="table table-hover" id="dev-table">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Nom</th>
+								<th>Prenom</th>
+								<th>Tel</th>
+								<th>Email</th>
+							</tr>
+						</thead>
+						<tbody>
+<!-- Construction dynamique du contenu du tableau -->
+	<tr ng-repeat="adherent in adherents">
+		<td>
+		<a href="" class="btn btn-success btn-block" ng-click="loadAdherent(adherent.id)">{{adherent.id}}</a>	
+		</td>
+		<td>{{adherent.nom}}</td>
+		<td>{{adherent.prenom}}</td>
+		<td>{{adherent.tel}}</td>
+		<td>{{adherent.email}}</td>
+	</tr>
+	<tr align=center>
+		<td colspan="5">
+			<a href="" class="btn btn-success btn-block" ng-click="loadAdherent(0)">Nouvel adherent</a>
+		</td>
+	</tr>
+	</tbody>
+</table>
+</div></div>
+</div></div>
+</div>
+<div ng-if="menu == 'adherent' && adherent != null">
+	<div class="container">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default"> 
+                <div class="panel-heading">
+                    <h3 class="panel-title">Edition <c:choose >
+                    <span ng-if="adherent.id == 0">d'un nouvel adherent</span>
+                    <span ng-if="adherent.id != 0">de l'adherent N° {{adherent.id}}</span>
+					</h3>
+                </div>
+                <div class="panel-body">
+                    <form >
+                        <fieldset>
+                            <div class="form-group">
+                                Nom &nbsp;&nbsp;: <input class="form-control"  ng-model="adherent.nom">
+                            </div>
+                            <div class="form-group">
+                                Prenom &nbsp;: <input class="form-control" ng-model="adherent.prenom" >
+                            </div>
+                             <div class="form-group">
+                                Tel : <input class="form-control" ng-model="adherent.tel" >
+                            </div>
+                            <div class="form-group">
+                                Email : <input class="form-control" ng-model="adherent.email" >
+                            </div>
+                            <!-- Change this to a button or input when using this as a form -->
+                            <div ng-if="adherent.id != 0">
+								
+									<button class="btn btn-success btn-block" ng-click="updateAdherent(adherent)" >Modifier</button>
+									<button class="btn btn-success btn-block" ng-click="removeAdherent(adherent.id)" >Supprimer</button>
+							</div>
+							<div ng-if="adherent.id == 0">
+								<button type="submit"  class="btn btn-success btn-block" ng-click="createAdherent(adherent)" >Créer</button>
+							</div>
+                            <button  class="btn  btn-block" ng-click="loadAllAdherent()">Retour</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div ng-if="menu == 'accueil'">
+	<div class="container">
+	<div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default"> 
+                <div class="panel-heading">
+                    <h3 class="panel-title">Edition <c:choose >
+                    <span >Biblio Web ...</span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <img alt="icone" src="img/biblio.jpg">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>
